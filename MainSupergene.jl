@@ -2,7 +2,7 @@ include("./AnalysisModelSupergene.jl")
 
 
 
-########### PARAMETERS ---------------------------------------------------------------------
+########### PARAMETERS --------------------------------------------------------------------- #Modify this for changing the parameter of each simulation
 
 
 const typeOfInitialization = "OnlyABab" # Uniform, UniformNoBA, OnlyAB, Onlyab, OnlyBA, OnlyABab or InvasionBA
@@ -22,14 +22,11 @@ const disassortativeLevel = 0.0
 const recombinationRateRD = 0.5
 
 migrationRate = 0.05
-
 selectGoodHomozygotes = 1.0
 selectBadHomozygotes = 0.5
 selectHeterozygotes = 0.2
 additionalSelectInvHomozygotes = 0.95
 recombinationRate = 0.2
-
-
 
 ########### DO NOT TOUCH  ---------------------------------------------------------------------
 
@@ -51,49 +48,35 @@ const genotypeOtherDemeVector = createVectorGenotypeOtherDeme(genotypeList)
 ########### SIMULATIONS ---------------------------------------------------------------------
 
 
-### ONE SIMULATION
+### ONE SIMULATION ### Uncomment this to perform a single simulation
 
-  const nameFile = "test7one"
-  const TstopMigration = 5000
-   const Tend = 10000
- # const TstopMigration = 1
- # const Tend =2 
-  @time csvOneSimulation(genotypeList, recombinationMatrix, disassortativeMatingScript, disassortativeLevel, selectionGenotypeVector, genotypeOtherDemeVector, migrationRate, migrationUnidirectionnal, boolFinitePopulation, carryingCapacity, mutationRate, inversionRate, inversionType, TstopMigration, Tend, nameFile)
+#  const nameFile = "test7one"
+#  const TstopMigration = 5000
+#   const Tend = 10000
+#  @time csvOneSimulation(genotypeList, recombinationMatrix, disassortativeMatingScript, disassortativeLevel, selectionGenotypeVector, genotypeOtherDemeVector, migrationRate, migrationUnidirectionnal, boolFinitePopulation, carryingCapacity, mutationRate, inversionRate, inversionType, TstopMigration, Tend, nameFile)
+#
+### SENSITIVITY ANALYSIS #Perform analyses exploring a parameter space. Modify the parameter arrays to change the parameter space explored
 
-### SENSITIVITY ANALYSIS
-
-# const nameFile = "testNoDissortativeMatingGood1Bad05Het01"
-  const nameFile = ARGS[1]
+const nameFile = ARGS[1]
 
 const TstopMigration = 5000
 const Tend = 10000
-
-# const repJulia =10 
- const repJulia = parse(Int32, ARGS[2])
-
-#const repBash = 1
-  const repBash = parse(Int32, ARGS[3])
+const repJulia = parse(Int32, ARGS[2])
+const repBash = parse(Int32, ARGS[3])
 
 const nameParam1 = "migrationRate"
-#  const valuesParam1 = linspace(0.0, 0.2, 3)
-# const valuesParam1 = range(0.01,stop=0.2,length=5)
 const valuesParam1 = [0.05 0.1 0.15] 
 
 const nameParam2 = "recombinationRate"
-# const valuesParam2 = linspace(0.0, 0.2, 3)
-# const valuesParam2 = range(0.0,stop=0.2,length=5)
 const valuesParam2 = [0.0 0.1 0.2 0.3 0.4 0.5]
 
-const nameParam3 = "additionalSelectInvHomozygotes"
-# # const valuesParam3 = linspace(0.0, 0.2, 30)
+const nameParam3 = "additionalSelectInvHomozygotes" #Mutation load
 const valuesParam3 = [0.0 0.05 0.1 0.15 0.20 0.25 0.3 0.35]
 
-const nameParam4 = "selectHeterozygotes"
-# const valuesParam4 = linspace(0.0, 0.2, 30)
+const nameParam4 = "selectHeterozygotes" #Fitness of recombinant
 const valuesParam4 = [0.2]
 
-const nameParam5 = "selectBadHomozygotes"
-# const valuesParam5 = linspace(0.0, 0.2, 30)
+const nameParam5 = "selectBadHomozygotes" #Fitness of immigrant genotypes (e.g. ab/ab in pop 1, AB/AB in pop 2)
 const valuesParam5 = [0.5]
 
 csvSensitivityAnalysis3D(genotypeList,

@@ -12,7 +12,7 @@ To compute a single simulation (e.g. figure 2B-G), uncomment the section corresp
 The sensitivity analyse function produce two tables:
 
 1: SensitivityAnalysis\_Name.txt, which looks like that:
-param1;param2;param3;param4;param5;rep;state;genotype;frequency 
+*param1;param2;param3;param4;param5;rep;state;genotype;frequency 
 0.05;0.0;0.0;0.2;0.5;7;0;1;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;2;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;3;0.0 
@@ -21,13 +21,13 @@ param1;param2;param3;param4;param5;rep;state;genotype;frequency
 0.05;0.0;0.0;0.2;0.5;7;0;6;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;7;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;8;0.0 
-0.05;0.0;0.0;0.2;0.5;7;0;9;0.0 
+0.05;0.0;0.0;0.2;0.5;7;0;9;0.0* 
+This file describe the state of the populations at the end of the migratory phase (state=0) and at the end of the non-migratory phase (state=1), depending on the parameter defined on the script (param1-5), and for each repetition. The state of the populations is described by the frequency of each genotype. Genotypes are numbered from 1 to 128. Please refer to the list at the end of this document to identify each genotype
 
-This file describe the state of the populations at the end of the migratory phase (state=0) and at the end of the non-migratory phase (state=1), depending on the parameter defined the the script (param1-5), and for each repetition. The state of the population is described by the frequency of each genotype. Genotypes are numbered from 1 to 128. Please refer to the list at the end of this document to identify each genotype
 and 
 
 2: SensitivityAnalysis2\_Name.txt, which looks like that:
-param1;param2;param3;param4;param5;rep;state;deme;chromosome;frequency 
+*param1;param2;param3;param4;param5;rep;state;deme;chromosome;frequency 
 0.05;0.0;0.0;0.2;0.5;7;0;1;1;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;1;2;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;1;3;0.0 
@@ -36,15 +36,14 @@ param1;param2;param3;param4;param5;rep;state;deme;chromosome;frequency
 0.05;0.0;0.0;0.2;0.5;7;0;1;6;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;1;7;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;1;8;0.2738547709541908 
-0.05;0.0;0.0;0.2;0.5;7;0;2;1;0.0
+0.05;0.0;0.0;0.2;0.5;7;0;2;1;0.0*
 This file describe the state of the populations at the end of the migratory phase (state=0) and at the end of the non-migratory phase (state=1), depending on the parameter defined the the script (param1-5), and for each repetition. The state of the population is described by the frequency of each haplotype ("chromosome") in each population (deme 1 and deme 2). Haplotypes are numbered from 1 to 8:  
-  1: B-A (inversion)  2: b-A (inversion)  3: B-a (inversion)  4: b-a (inversion)  5: A-B  6: A-b 7: a-B 8: a-b
+ 1: B-A (inversion)  2: b-A (inversion)  3: B-a (inversion)  4: b-a (inversion)  5: A-B  6: A-b 7: a-B 8: a-b
 
 
 The single simulation function produce two tables:
-
-1: SingleTimeSeries\_Name.txt, which looks like that:
-time;genotype;frequency 
+-	1: SingleTimeSeries\_Name.txt, which looks like that:
+*time;genotype;frequency 
 0;1;0.0 
 0;2;0.0 
 0;3;0.0 
@@ -53,10 +52,11 @@ time;genotype;frequency
 0;6;0.0 
 0;7;0.0 
 0;8;0.0 
-0;9;0.0
+0;9;0.0*
 
-2: SingleTimeSeries2\_Name.txt, which looks like that:
-time;deme;chromosome;frequency 
+and 
+- 2: SingleTimeSeries2\_Name.txt, which looks like that:
+*time;deme;chromosome;frequency 
 0;1;1;0.0 
 0;1;2;0.0 
 0;1;3;0.0 
@@ -65,10 +65,9 @@ time;deme;chromosome;frequency
 0;1;6;0.0 
 0;1;7;0.0 
 0;1;8;0.5 
-0;2;1;0.0
+0;2;1;0.0*
 
-These tables describe the state of the population every generation. The output are either the genotype frequency (in SingleTimeSeries_\*; Please refer to the list at the end of this document to identify each genotype) or in haplotype frequency. 
-
+These tables describe the state of the populations every generation. The output are either the genotype frequency (in SingleTimeSeries_\*; Please refer to the list at the end of this document to identify each genotype) or in haplotype frequency. 
 
 *Genotype list:
 1--> Population=1, Genotype=BA/BA
