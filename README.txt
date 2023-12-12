@@ -1,10 +1,9 @@
-Script for the paper: "The interplay between local adaptation and gene flow contributes to the formation of supergenes"
+Scripts for the paper: "The interplay between local adaptation and gene flow contributes to the formation of supergenes"
+For any question or information, do not hesitate to contact me at paul.yann.jay(at)gmail.com
 
-Usage:
+To perform analyses of the model, the only script to be used is MainSupergene.jl. THis script import functions from the two other julia scripts.
 
-julia MainSupergene.jl NameOutput(string) NumberOfRepetition(integer) Identifier(integer)
-e.g. julia MainSupergene.jl TestScript 10 1
-
+julia MainSupergene.jl NameOutput(string) NumberOfRepetition(integer) Identifier(integer) e.g. julia MainSupergene.jl TestScript 10 1
 The parameter space explored is defined by the arrays in MainSupergene.jl. Change the values to explore other parameters. 
 To compute a single simulation (e.g. figure 2B-G), uncomment the section corresponding in MainSupergene.jl and comment the "Sensitivity analysis" section.
 
@@ -67,6 +66,8 @@ time;deme;chromosome;frequency
 0;1;8;0.5 
 
 These tables describe the state of the populations every generation. The output are either the genotype frequency (in SingleTimeSeries_\*; Please refer to the list at the end of this document to identify each genotype) or in haplotype frequency. 
+
+These outputs (Either the single simulations or the sensitivity analyses) can be plotted using R script. The main plots can be produced with the script PlotPaper12-12-23.R. This script imports the other R script (inputGenotypes.R), which associate genotype number to genotype. 
 
 Genotype list:
 1--> Population=1, Genotype=BA/BA
