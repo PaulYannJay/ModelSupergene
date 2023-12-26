@@ -48,14 +48,14 @@ const genotypeOtherDemeVector = createVectorGenotypeOtherDeme(genotypeList)
 ########### SIMULATIONS ---------------------------------------------------------------------
 
 
-### ONE SIMULATION ### Uncomment this to perform a single simulation
+### ONE SIMULATION ### Uncomment this section to perform a single simulation
 
 #  const nameFile = "test7one"
 #  const TstopMigration = 5000
 #   const Tend = 10000
 #  @time csvOneSimulation(genotypeList, recombinationMatrix, disassortativeMatingScript, disassortativeLevel, selectionGenotypeVector, genotypeOtherDemeVector, migrationRate, migrationUnidirectionnal, boolFinitePopulation, carryingCapacity, mutationRate, inversionRate, inversionType, TstopMigration, Tend, nameFile)
 #
-### SENSITIVITY ANALYSIS #Perform analyses exploring a parameter space. Modify the parameter arrays to change the parameter space explored
+### SENSITIVITY ANALYSIS ### Uncomment this section to perform a analyses exploring a parameter space. Modify the parameter arrays to change the parameter space explored
 
 const nameFile = ARGS[1]
 
