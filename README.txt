@@ -1,14 +1,16 @@
-Scripts for the paper: "The interplay between local adaptation and gene flow contributes to the formation of supergenes"
+Scripts for the paper: "The interplay of local adaptation and gene flow may lead to the formation of supergenes"
 For any question or information, do not hesitate to contact me at paul.yann.jay(at)gmail.com
 
-To perform analyses of the model, the only script to be used is MainSupergene.jl. THis script import functions from the two other julia scripts.
+To perform analyses of the model, the only script to be used is MainSupergene.jl. This script import functions from the two other julia scripts.
 
-julia MainSupergene.jl NameOutput(string) NumberOfRepetition(integer) Identifier(integer) e.g. julia MainSupergene.jl TestScript 10 1
-The parameter space explored is defined by the arrays in MainSupergene.jl. Change the values to explore other parameters. 
+Usage: 
+julia MainSupergene.jl NameOutput(string) NumberOfRepetition(integer) Identifier(integer) e.g. julia  MainSupergene.jl TestScript 10 1
+
+The parameter space explored is defined by the arrays in MainSupergene.jl. Change the arrays to explore other parameter value. 
 To compute a single simulation (e.g. figure 2B-G), uncomment the section corresponding in MainSupergene.jl and comment the "Sensitivity analysis" section.
 
 
-The sensitivity analyse function produce two tables:
+The "sensitivity analyse" function produces two tables:
 
 1: SensitivityAnalysis\_Name.txt, which looks like that:
 param1;param2;param3;param4;param5;rep;state;genotype;frequency 
@@ -21,7 +23,7 @@ param1;param2;param3;param4;param5;rep;state;genotype;frequency
 0.05;0.0;0.0;0.2;0.5;7;0;7;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;8;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;9;0.0
-This file describe the state of the populations at the end of the migratory phase (state=0) and at the end of the non-migratory phase (state=1), depending on the parameter defined on the script (param1-5), and for each repetition. The state of the populations is described by the frequency of each genotype. Genotypes are numbered from 1 to 128. Please refer to the list at the end of this document to identify each genotype
+This file describes the state of the two populations ("deme") at the end of the migratory phase (state=0) and at the end of the non-migratory phase (state=1), depending on the parameter values defined in the script (param1-5), and for each repetition. The state of the populations is described by the frequency of each genotype. Genotypes are numbered from 1 to 128. Please refer to the list at the end of this document to identify each genotype
 
 and 
 
@@ -36,11 +38,11 @@ param1;param2;param3;param4;param5;rep;state;deme;chromosome;frequency
 0.05;0.0;0.0;0.2;0.5;7;0;1;7;0.0 
 0.05;0.0;0.0;0.2;0.5;7;0;1;8;0.2738547709541908 
 0.05;0.0;0.0;0.2;0.5;7;0;2;1;0.0
-This file describe the state of the populations at the end of the migratory phase (state=0) and at the end of the non-migratory phase (state=1), depending on the parameter defined the the script (param1-5), and for each repetition. The state of the population is described by the frequency of each haplotype ("chromosome") in each population (deme 1 and deme 2). Haplotypes are numbered from 1 to 8:  
+This file describes the state of the two populations ("deme") at the end of the migratory phase (state=0) and at the end of the non-migratory phase (state=1), depending on the parameter values defined the the script (param1-5), and for each repetition. The state of the population is described by the frequency of each haplotype ("chromosome") in each population (deme 1 and deme 2). Haplotypes are numbered from 1 to 8:  
  1: B-A (inversion)  2: b-A (inversion)  3: B-a (inversion)  4: b-a (inversion)  5: A-B  6: A-b 7: a-B 8: a-b
 
 
-The single simulation function produce two tables:
+The "single simulation" function produce two tables:
 -	1: SingleTimeSeries\_Name.txt, which looks like that:
 time;genotype;frequency 
 0;1;0.0 
@@ -65,9 +67,9 @@ time;deme;chromosome;frequency
 0;1;7;0.0 
 0;1;8;0.5 
 
-These tables describe the state of the populations every generation. The output are either the genotype frequency (in SingleTimeSeries_\*; Please refer to the list at the end of this document to identify each genotype) or in haplotype frequency. 
+These tables describe the state of the two populations ("deme") every generation. The output are either the genotype frequencies (in SingleTimeSeries_\*; Please refer to the list at the end of this document to identify each genotype) or the haplotype frequencies. 
 
-These outputs (Either the single simulations or the sensitivity analyses) can be plotted using R script. The main plots can be produced with the script PlotPaper12-12-23.R. This script imports the other R script (inputGenotypes.R), which associate genotype number to genotype. 
+These outputs (either of the single simulations or the sensitivity analyses) can be plotted using an R script. The main plots can be produced with the script PlotPaper20-12-23.R. This script imports the other R script (inputGenotypes.R), which associates genotype numbers to genotypes. 
 
 Genotype list:
 1--> Population=1, Genotype=BA/BA
