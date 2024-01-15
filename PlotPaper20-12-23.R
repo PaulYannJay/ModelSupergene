@@ -29,10 +29,10 @@ data2 <- read.table("Data/SensitivityAnalysis2DataFigure2-3.txt",
 
 source("inputGenotypes.R") ### Source file containing the Genotype
 data2$chromosomeType = "0"
-colnames(data2)=c("m", "r", "MutLoad", "HetFit", "BadHomoFit","Dominance","rep","state","deme","chromosome"    
+colnames(data2)=c("m", "r", "HomoFit", "HetFit", "BadHomoFit","Dominance","rep","state","deme","chromosome"    
 ,"frequency","chromosomeType")
 
-#### Change Genotype number to Genotype name, based on the source file
+#### Change haplotype number to haplotype name, based on the source file
 data2$chromosomeType[data2$chromosome %in% chromBAlist2] = "BA"
 data2$chromosomeType[data2$chromosome %in% chromABlist2] = "AB"
 data2$chromosomeType[data2$chromosome %in% chromablist2] = "ab"
@@ -44,8 +44,8 @@ data2$chromosomeType[data2$chromosome %in% chromInvOthlist2] = "InvOther"
 data2$chromosomeType <- factor(data2$chromosomeType, 
                                levels=c("BA","AB","ab","ba", "other", "InvOther"))
 
-### Merge the frequency of recombinant phenotype
-FreqChromosomeType <- data2 %>% group_by(m,r,MutLoad,HetFit,BadHomoFit,Dominance,rep,state,deme,chromosomeType) %>% summarise(frequency = sum(frequency))
+### Merge the frequency of recombinant ("other") haplotypes
+FreqChromosomeType <- data2 %>% group_by(m,r,HomoFit,HetFit,BadHomoFit,Dominance,rep,state,deme,chromosomeType) %>% summarise(frequency = sum(frequency))
 
 FreqChromosomeTypeForm=FreqChromosomeType
 FreqChromosomeTypeForm$allele=paste(FreqChromosomeTypeForm$chromosomeType, FreqChromosomeTypeForm$state, FreqChromosomeTypeForm$deme, sep="_") #Allele_state_deme
@@ -53,53 +53,58 @@ FreqChromosomeTypeForm$chromosomeType=NULL
 FreqChromosomeTypeForm$state=NULL
 FreqChromosomeTypeForm$deme=NULL
 FreqChromosomeTypeForm_Wide=spread(FreqChromosomeTypeForm, allele, frequency)
-FreqChromosomeTypeForm_Wide$RM0_1=FreqChromosomeTypeForm_Wide$ba_0_1+FreqChromosomeTypeForm_Wide$BA_0_1+FreqChromosomeTypeForm_Wide$InvOther_0_1
+
+FreqChromosomeTypeForm_Wide$RM0_1=FreqChromosomeTypeForm_Wide$ba_0_1+FreqChromosomeTypeForm_Wide$BA_0_1+FreqChromosomeTypeForm_Wide$InvOther_0_1 #Frequency of inversion (Recombination modifier, RM) in population 1 in phase 0
 FreqChromosomeTypeForm_Wide$RM0_2=FreqChromosomeTypeForm_Wide$ba_0_2+FreqChromosomeTypeForm_Wide$BA_0_2+FreqChromosomeTypeForm_Wide$InvOther_0_2
 FreqChromosomeTypeForm_Wide$RM1_1=FreqChromosomeTypeForm_Wide$ba_1_1+FreqChromosomeTypeForm_Wide$BA_1_1+FreqChromosomeTypeForm_Wide$InvOther_1_1
 FreqChromosomeTypeForm_Wide$RM1_2=FreqChromosomeTypeForm_Wide$ba_1_2+FreqChromosomeTypeForm_Wide$BA_1_2+FreqChromosomeTypeForm_Wide$InvOther_1_2
-FreqChromosomeTypeForm_Wide$FitCost=1-FreqChromosomeTypeForm_Wide$MutLoad
+
+FreqChromosomeTypeForm_Wide$FitCost=1-FreqChromosomeTypeForm_Wide$HomoFit #The fitess cost of the inversion ("mutation load") is the inverse of the fitness of the inversion homozygotes.
 
 
-#### Two potential outcome, we keep only the one where the inversion does not evolve in Pop2 ###
+#### Two potential outcomes, we keep only the one where the inversion does not evolve in Pop2 (so when the inversion evolves in pop 1) ###
 FreqChromosomeTypeForm_Wide=subset(FreqChromosomeTypeForm_Wide, FreqChromosomeTypeForm_Wide$ba_0_2<0.1)
 
+################################### 
 ## Figure3 ##
+################################### 
+
 FreqChromosomeTypeForm_WideSum=FreqChromosomeTypeForm_Wide %>% group_by(FitCost, r, m) %>% summarise_all(mean)
 base=ggplot(FreqChromosomeTypeForm_WideSum[FreqChromosomeTypeForm_WideSum$m==0.1,])
 PlotRM0xRecomb0=base+ geom_point(aes(x=RM0_1, y=other_0_1, color=FitCost, shape=as.factor(r)), size=3, alpha=0.8)+
-  labs(x="Inversion frequency", y="Frequency of valley phenotype\n (recombinant) in pop 1")+
+  labs(x="Inversion frequency", y="Frequency of Ab & aB")+
   ggtitle("Recombinant haplotypes (aB-Ab)")+
-  scale_shape("Recombination rate", solid = T)+#_manual("Recombination rate", values=c(0,21,22,23,24,25))+
+  scale_shape("Recombination rate", solid = T)+
   scale_color_viridis(name = "Mutation load", option = "A", begin = 0.0, end = 0.8, direction = -1)+ThemeSobr
 
 PlotRM0xSecondPeak=base+geom_point(aes(x=RM0_1, y=ab_0_1, color=FitCost, shape=as.factor(r)), alpha=0.8, size=3)+
-  labs(x="Inversion frequency (BA)", y="Frequency of ancestral \n second haplotypes")+
+  labs(x="Inversion frequency (BA)", y="Frequency of ab")+
   ggtitle("Immigrant haplotype (ab)")+
   theme(axis.title.x = element_text(face="bold"))+
   scale_shape("Recombination rate", solid = T)+
   scale_color_viridis(name = "Mutation load", option = "A", begin = 0.0, end = 0.8, direction = -1)+ThemeSobr
 
 PlotRM0xMainPeak=base+geom_point(aes(x=RM0_1, y=AB_0_1, color=FitCost, shape=as.factor(r)), alpha=0.8, size=3)+
-  labs(x="Inversion frequency", y="Frequency of ancestral \n main haplotype")+
+  labs(x="Inversion frequency", y="Frequency of AB")+
   ggtitle("Local haplotype (AB)")+
   scale_shape("Recombination rate", solid = T)+
   scale_color_viridis(name = "Mutation load", option = "A", begin = 0.0, end = 0.8, direction = -1)+ThemeSobr
 
 PlotRM1xRecomb1=base+ geom_point(aes(x=RM1_1, y=other_1_1, color=FitCost, shape=as.factor(r)), size=3, alpha=0.8)+
-  labs(x="Inversion frequency", y="Frequency of valley phenotype\n (recombinant) in pop 1")+
+  labs(x="Inversion frequency", y="Frequency of aB-Ab")+
   ggtitle("Recombinant haplotypes (aB-Ab)")+
   scale_shape("Recombination rate", solid = T)+
   scale_color_viridis(name = "Mutation load", option = "A", begin = 0.0, end = 0.8, direction = -1)+ThemeSobr
 
 PlotRM1xSecondPeak1=base+geom_point(aes(x=RM1_1, y=ab_1_1, color=FitCost, shape=as.factor(r)), alpha=0.8, size=3)+
-  labs(x="Inversion frequency (BA)", y="Frequency of ancestral \n second haplotypes")+
+  labs(x="Inversion frequency (BA)", y="Frequency of ab")+
   ggtitle("Immigrant haplotype (ab)")+
   theme(axis.title.x = element_text(face="bold"))+
   scale_shape("Recombination rate", solid = T)+
   scale_color_viridis(name = "Mutation load", option = "A", begin = 0.0, end = 0.8, direction = -1)+ThemeSobr
 
 PlotRM1xMainPeak1=base+geom_point(aes(x=RM1_1, y=AB_1_1, color=FitCost, shape=as.factor(r)), alpha=0.8, size=3)+
-  labs(x="Inversion frequency", y="Frequency of ancestral \n main haplotype")+
+  labs(x="Inversion frequency", y="Frequency of AB")+
   ggtitle("Local haplotype (AB)")+
   scale_shape("Recombination rate", solid = T)+
   scale_color_viridis(name = "Mutation load", option = "A", begin = 0.0, end = 0.8, direction = -1)+ThemeSobr
@@ -144,7 +149,10 @@ Figure3
 save_plot("~/Paper/SupergeneModel/ReviewMolEcol/Code/Figure3_V3.png", Figure3, nrow = 3, base_aspect_ratio = 2.5)
 save_plot("~/Paper/SupergeneModel/ReviewMolEcol/Code/Figure3_V3.svg", Figure3, nrow = 3, ncol=2)
 
-#### Freqency Scenario. Figure 2A ###
+################################### 
+#### Scenario frequency. Figure 2A ###
+################################### 
+
 dom=1.0
 FreqChromosomeTypeForm_Wide_Sub=subset(FreqChromosomeTypeForm_Wide, (    FreqChromosomeTypeForm_Wide$HetFit==0.2 & #Change the value of the parameter to produce the different figures.
                                                                            FreqChromosomeTypeForm_Wide$BadHomoFit==0.5 &
@@ -193,7 +201,7 @@ for (i in 1:nrow(FreqChromosomeTypeForm_Wide_Sub))
 
 FreqChromosomeTypeForm_Wide_Sub$scenar=as.factor(FreqChromosomeTypeForm_Wide_Sub$scenar)
 FreqChromosomeTypeForm_Wide_Sub$FitCost=as.numeric(FreqChromosomeTypeForm_Wide_Sub$FitCost)
-FreqChromosomeTypeForm_Wide_SubSub=FreqChromosomeTypeForm_Wide_Sub[FreqChromosomeTypeForm_Wide_Sub$MutLoad %in% c(0.0,0.1,0.20,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0),]
+FreqChromosomeTypeForm_Wide_SubSub=FreqChromosomeTypeForm_Wide_Sub[FreqChromosomeTypeForm_Wide_Sub$HomoFit %in% c(0.0,0.1,0.20,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0),]
 FreqChromosomeTypeForm_Wide_SubSub=FreqChromosomeTypeForm_Wide_Sub
 
 Figure2=ggplot(FreqChromosomeTypeForm_Wide_SubSub,
@@ -206,12 +214,14 @@ Figure2=ggplot(FreqChromosomeTypeForm_Wide_SubSub,
   
   ggtitle(label = "Recombination Rate")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.title=element_blank())+
-  scale_x_continuous(breaks=pretty(FreqChromosomeTypeForm_Wide_SubSub$MutLoad, 5))+
+  scale_x_continuous(breaks=pretty(FreqChromosomeTypeForm_Wide_SubSub$HomoFit, 5))+
   scale_fill_manual(values=c("#8960b3","#61ad65","#b9495e","#b68b39","#0000ff", "#5555ff", "#9999ff" , "#9ab9ff"))
 
 Figure2 
 
-#Simulation plot. (Figure 2B-G) ##
+################################### 
+##### Simulation plots. (Figure 2B-G) ##
+################################### 
 data2 <- read.table("Data/SingleTimeSeries2SimulorangeDBlue.20.txt",header=T,sep=";")
 data2 <- data2[data2$time %% 10==0,]
 data2$frequency <- as.numeric(gsub("f", "e", as.character(data2$frequency)))
